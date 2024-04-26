@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
 import '../api/firebase_todo_api.dart';
 import '../models/todo_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class TodoListProvider with ChangeNotifier {
+class MyTodoListProvider with ChangeNotifier {
   late FirebaseTodoAPI firebaseService;
   late Stream<QuerySnapshot> _todosStream;
   Todo? _selectedTodo;
 
-  TodoListProvider() {
+  MyTodoListProvider() {
     firebaseService = FirebaseTodoAPI();
     fetchTodos();
   }
