@@ -90,15 +90,12 @@ class _SignupPageState extends State<SignupPage> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             UserDeets user = UserDeets(
-              email: emailController.text,
-              firstName: firstNameController.text,
-              lastName: lastNameController.text,
-            );
+                email: emailController.text,
+                firstName: firstNameController.text,
+                lastName: lastNameController.text);
 
             await context.read<MyAuthProvider>().signUp(
                 emailController.text, passwordController.text, user, context);
-
-            //  if (context.mounted) Navigator.pop(context);
           }
         },
         child: const Text('Sign up', style: TextStyle(color: Colors.purple)),
