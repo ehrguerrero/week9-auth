@@ -20,8 +20,27 @@ class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
     // access the list of todos in the provider
-    Stream<QuerySnapshot> todosStream = context.watch<TodoListProvider>().todos;
+    Stream<QuerySnapshot> todosStream =
+        context.watch<MyTodoListProvider>().todos;
+    Stream<User?> userStream = context.watch<MyAuthProvider>().uStream;
 
+    return StreamBuilder(
+        stream: userStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Error encountered! ${snapshot.error}"),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData) {
+            return const LoginPage();
+          }
+          // if user is logged in, display the scaffold containing the streambuilder for the todos
+          return displayScaffold(context, todosStream);
+        });
   }
 
   Scaffold displayScaffold(
@@ -41,7 +60,7 @@ class _TodoPageState extends State<TodoPage> {
         ListTile(
           title: const Text('Logout'),
           onTap: () {
-            context.read<AuthProvider>().signOut();
+            context.read<MyAuthProvider>().signOut();
             Navigator.pop(context);
           },
         ),
@@ -74,8 +93,8 @@ class _TodoPageState extends State<TodoPage> {
               return Dismissible(
                 key: Key(todo.id.toString()),
                 onDismissed: (direction) {
-                  context.read<TodoListProvider>().changeSelectedTodo(todo);
-                  context.read<TodoListProvider>().deleteTodo();
+                  context.read<MyTodoListProvider>().changeSelectedTodo(todo);
+                  context.read<MyTodoListProvider>().deleteTodo();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('${todo.title} dismissed')));
@@ -90,7 +109,7 @@ class _TodoPageState extends State<TodoPage> {
                     value: todo.completed,
                     onChanged: (bool? value) {
                       context
-                          .read<TodoListProvider>()
+                          .read<MyTodoListProvider>()
                           .toggleStatus(index, value!);
                     },
                   ),
@@ -112,7 +131,7 @@ class _TodoPageState extends State<TodoPage> {
                       IconButton(
                         onPressed: () {
                           context
-                              .read<TodoListProvider>()
+                              .read<MyTodoListProvider>()
                               .changeSelectedTodo(todo);
                           showDialog(
                             context: context,

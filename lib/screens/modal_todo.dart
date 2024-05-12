@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/todo_model.dart';
@@ -37,7 +36,7 @@ class TodoModal extends StatelessWidget {
       case 'Delete':
         {
           return Text(
-            "Are you sure you want to delete '${context.read<TodoListProvider>().selected.title}'?",
+            "Are you sure you want to delete '${context.read<MyTodoListProvider>().selected.title}'?",
           );
         }
       // Edit and add will have input field in them
@@ -63,7 +62,7 @@ class TodoModal extends StatelessWidget {
                   completed: false,
                   title: _formFieldController.text);
 
-              context.read<TodoListProvider>().addTodo(temp);
+              context.read<MyTodoListProvider>().addTodo(temp);
 
               // Remove dialog after adding
               Navigator.of(context).pop();
@@ -81,7 +80,7 @@ class TodoModal extends StatelessWidget {
           //   }
           case 'Delete':
             {
-              context.read<TodoListProvider>().deleteTodo();
+              context.read<MyTodoListProvider>().deleteTodo();
 
               // Remove dialog after editing
               Navigator.of(context).pop();
